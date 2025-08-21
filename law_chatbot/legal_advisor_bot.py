@@ -37,7 +37,7 @@ If the context does not contain the answer, say:
 """
 
 class LegalAdvisorBot:
-    def __init__(self, pdf_path="law_chatbot/law1.pdf"):
+    def __init__(self, pdf_path="law_chatbot/law1.pdf", persist_directory="chroma_db"):
         self.pdf_path = pdf_path
         self.llm = None
         self.embedding_model = None
