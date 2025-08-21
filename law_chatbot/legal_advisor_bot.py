@@ -48,6 +48,7 @@ class LegalAdvisorBot:
                 model="llama-3.3-70b-versatile",
                 temperature=0,
                 max_tokens=None,
+                proxies=None
                 api_key=GROQ_API_KEY
             )
             if not GROQ_API_KEY:
