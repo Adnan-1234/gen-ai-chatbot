@@ -52,7 +52,7 @@ st.markdown("""
 @st.cache_resource
 def load_bot():
     try:
-        return LegalAdvisorBot(pdf_path="law1.pdf")
+        return LegalAdvisorBot(pdf_path="law_chatbot/law1.pdf")
     except Exception as e:
         st.error(f"Error initializing bot: {str(e)}")
         return None
