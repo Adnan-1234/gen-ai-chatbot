@@ -1,8 +1,11 @@
+# Add this at the very top
 __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 import streamlit as st
 from legal_advisor_bot import LegalAdvisorBot
+import os
 
 # --- Page Config ---
 st.set_page_config(
@@ -48,7 +51,11 @@ st.markdown("""
 # --- Initialize Bot ---
 @st.cache_resource
 def load_bot():
-    return LegalAdvisorBot()
+    try:
+        return LegalAdvisorBot(pdf_path="law1.pdf")
+    except Exception as e:
+        st.error(f"Error initializing bot: {str(e)}")
+        return None
 
 bot = load_bot()
 
@@ -65,22 +72,32 @@ user_input = st.text_input("💬 Enter your legal question:", key="input")
 
 # --- Chat Handling ---
 if st.button("Ask") and user_input.strip() != "":
-    with st.spinner("Analyzing your query... ⏳"):
-        answer = bot.ask_question(user_input)
-
-    # Save history
-    st.session_state.chat_history.append(("user", user_input))
-    st.session_state.chat_history.append(("bot", answer))
+    if bot is None:
+        st.error("Bot is not initialized properly. Please check your API key and try again.")
+    else:
+        with st.spinner("Analyzing your query... ⏳"):
+            try:
+                answer = bot.ask_question(user_input)
+                # Save history
+                st.session_state.chat_history.append(("user", user_input))
+                st.session_state.chat_history.append(("bot", answer))
+            except Exception as e:
+                st.error(f"Error getting answer: {str(e)}")
 
 # --- Display Chat ---
-st.subheader("📜 Conversation")
-for role, text in st.session_state.chat_history:
-    if role == "user":
-        st.markdown(f"<div class='chat-bubble user'>👤 **You:** {text}</div>", unsafe_allow_html=True)
-    else:
-        st.markdown(f"<div class='chat-bubble bot'>🤖 **Bot:** {text}</div>", unsafe_allow_html=True)
+if st.session_state.chat_history:
+    st.subheader("📜 Conversation")
+    for role, text in st.session_state.chat_history:
+        if role == "user":
+            st.markdown(f"<div class='chat-bubble user'>👤 **You:** {text}</div>", unsafe_allow_html=True)
+        else:
+            st.markdown(f"<div class='chat-bubble bot'>🤖 **Bot:** {text}</div>", unsafe_allow_html=True)
 
 # --- Sidebar ---
 st.sidebar.title("⚙️ Settings")
 st.sidebar.info("This chatbot is powered by **Groq LLaMA 3.3 70B** + **LangChain**.")
 st.sidebar.markdown("Developed with ❤️ using Streamlit.")
+
+# Show warning if bot not initialized
+if bot is None:
+    st.sidebar.error("⚠️ Bot initialization failed. Please check your API key in Streamlit secrets.")
