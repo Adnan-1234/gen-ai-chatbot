@@ -29,7 +29,7 @@ If the context does not contain the answer, say:
 """
 
 class LegalAdvisorBot:
-    def __init__(self, pdf_path="E:\\oop project\\law_chatbot\\law1.pdf", persist_directory="E:\\oop project\\law_chatbot\\chroma_db"):
+    def __init__(self, pdf_path="law_chatbot\\law1.pdf", persist_directory="law_chatbot\\chroma_db"):
         self.pdf_path = pdf_path
         self.persist_directory = persist_directory
         self.llm = None
