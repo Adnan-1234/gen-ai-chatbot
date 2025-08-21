@@ -10,6 +10,9 @@ sentence-transformers==3.1.1
 pydantic==2.9.2
 numpy==1.26.4
 hnswlib==0.8.0
-pysqlite3-binary==0.5.4.post1
+pysqlite3-binary==0.5.4
 typing-extensions==4.11.0
 protobuf==4.25.3
+fastapi>=0.104.0
+uvicorn>=0.24.0
+anyio>=3.0.0
